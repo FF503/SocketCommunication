@@ -19,7 +19,9 @@ import javax.swing.JTextField;
  *This is just a skeleton that is meant to be copied and pasted and then modified.
  */
 public class CameraClient {
-
+	
+	//private static final String CAMERA_IP = "169.254.49.179";
+	
     private BufferedReader in;
     private PrintWriter out;
    
@@ -37,8 +39,8 @@ public class CameraClient {
 
     /**
      * Sets up the connection between the camera algorithm and the server. Since both the camera
-     * algorithm and the server are housed in the same processor, the ip adress used is localhost.
-     * After establishing a connection(unsecure) the client tehn intiliazes its input stream and output
+     * algorithm and the server are housed in the same processor, the ip address used is localhost.
+     * After establishing a connection(unsecure) the client then initializes its input stream and output
      * stream object
      */
     public void connectToServer() throws IOException {
@@ -48,17 +50,16 @@ public class CameraClient {
 
         // Make connection and initialize streams
         Socket socket = new Socket(serverAddress, 9898);
-        in = new BufferedReader(
-                new InputStreamReader(socket.getInputStream()));
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
 
     }
     
     /**
-     * Example method to show how ot use the in and out objects to send and recieve data.
+     * Example method to show how to use the in and out objects to send and receive data.
      */
     public void sendAndRecieve(){
-    	//output is in the form of a string that must follow the protocal
+    	//output is in the form of a string that must follow the protocol
     	String output = "";
     	out.println(output);
     	String response;

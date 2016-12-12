@@ -27,7 +27,7 @@ public abstract class Client {
 		socket = new Socket(address, port);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()), true);
-		in.mark(1000);
+		//in.mark(1000);	Could be useful
 		return socket.isConnected();
 	}
 	

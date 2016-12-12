@@ -13,7 +13,7 @@ import java.net.Socket;
  */
 public class Server {
 	
-	private static final int PORT = 9898;
+	private static final int PORT = 9899;
 	
     /**
      * Application method to run the server runs in an infinite loop
@@ -21,7 +21,7 @@ public class Server {
      * spawns a new thread to do the servicing and immediately returns
      * to listening.  Server creates a new Client number for each client probably can be modified for client name.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         int clientNumber = 0;
         ServerSocket listener = new ServerSocket(PORT);
         try {
@@ -43,6 +43,8 @@ public class Server {
     	//Identification information about the client
         private Socket socket;
         private int clientNumber;
+        private BufferedReader in;
+        private PrintWriter out;
 
         public ClientHandler(Socket socket, int clientNumber) {
             this.socket = socket;
@@ -56,27 +58,29 @@ public class Server {
         public void run() {
             try {
 
-                // Decorate the streams so we can send characters
+                // Convert the streams so we can send characters
                 // and not just bytes.  Ensure output is flushed
                 // after every newline.
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                out = new PrintWriter(socket.getOutputStream(), true);
 
                 // Send a welcome message to the client.
                 out.println("Connection with client " + clientNumber + " at " + socket + " complete.");
-                
+
+                String input = in.readLine();
 
                 // Get messages from the client enter switch statement to decide what to do
                 while (true) {
-                    String input = in.readLine();
-                    if (input != null && input.equals("exit")) {
-                        break;
-                    }
-                    
-                    //  Handles all inputs based off of protocol.
-                    switch (input){
-                    
-                    }
+                    if (input != null){ 
+                		if(input.equals("exit")) {
+                			break;
+                		}
+                	//  Handles all inputs based off of protocol.
+                        switch (input){
+                        
+                        }
+                        input = in.readLine();
+                    }                    
                 }
             } 
             catch (IOException e) {

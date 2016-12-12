@@ -20,7 +20,7 @@ public class CameraClient extends Client{
     private static Socket socket;
     private static ArrayList<String> allData;
     private static final String ADDRESS = "localhost";
-    private static final int PORT = 9898;
+    private static final int PORT = 9899;
    
 
     /**

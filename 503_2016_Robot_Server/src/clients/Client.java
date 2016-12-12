@@ -10,12 +10,12 @@ import java.util.ArrayList;
 
 public abstract class Client {
 	
-	private BufferedReader in;
-	private PrintWriter out;
-	private ArrayList<String> allData;
-	private int port;
-	private String address;
-	private Socket socket;
+	private static BufferedReader in;
+	private static PrintWriter out;
+	private static int port;
+	private static String address;
+	protected static ArrayList<String> allData;
+	protected static Socket socket;
 	
 	public Client(String address, int port){
 		this.port = port;
@@ -36,7 +36,7 @@ public abstract class Client {
 	}
 	
 	protected ArrayList<String> receiveData() throws IOException{
-		String line;
+		String line = null;
 		ArrayList<String> data = new ArrayList<String>();
 		while((line=in.readLine()) != null){
 			data.add(line);
@@ -45,5 +45,9 @@ public abstract class Client {
 		allData.addAll(data);
 		//allData = data;
 		return data;
+	}
+	
+	public String toString(){
+		return "Socket at port " + port + " and address at " + address;
 	}
 }

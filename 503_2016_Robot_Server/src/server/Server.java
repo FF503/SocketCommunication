@@ -13,7 +13,7 @@ import java.net.Socket;
  */
 public class Server {
 	
-	private static final int PORT = 9899;
+	private static final int PORT = 9898;
 	
     /**
      * Application method to run the server runs in an infinite loop
@@ -67,14 +67,11 @@ public class Server {
                 // Send a welcome message to the client.
                 out.println("Connection with client " + clientNumber + " at " + socket + " complete.");
 
-                String input = in.readLine();
+                String input = "";
 
                 // Get messages from the client enter switch statement to decide what to do
-                while (true) {
+                while (!input.equals("exit")) {
                     if (input != null){ 
-                		if(input.equals("exit")) {
-                			break;
-                		}
                 	//  Handles all inputs based off of protocol.
                         switch (input){
                         

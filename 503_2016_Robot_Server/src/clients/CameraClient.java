@@ -15,12 +15,8 @@ public class CameraClient extends Client{
 	
 	//private static final String CAMERA_IP = "169.254.49.179";
 	
-    private static BufferedReader in;
-    private static PrintWriter out;
-    private static Socket socket;
-    private static ArrayList<String> allData;
     private static final String ADDRESS = "localhost";
-    private static final int PORT = 9899;
+    private static final int PORT = 9898;
    
 
     /**
@@ -61,6 +57,7 @@ public class CameraClient extends Client{
     public ArrayList<String> receiveData() throws IOException{
     	return super.receiveData();
     }
+    
 /*    //**
      * Example method to show how to use the in and out objects to send and receive data.
      *//*
@@ -88,8 +85,8 @@ public class CameraClient extends Client{
         client.connectToServer();
         Scanner scan = new Scanner(System.in); 	//For testing purposes
         while(socket!=null && socket.isConnected()){
-        	client.sendData(scan.nextLine());
         	System.out.println(client.receiveData());	//For testing purposes
+        	client.sendData(scan.nextLine());
         }
     }
 }

@@ -1,29 +1,26 @@
-package cameraClientCode;
+package clients;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  *CLient Class for the camera needs to be integrated with actual camera code. 
  *This is just a skeleton that is meant to be copied and pasted and then modified.
  */
-public class CameraClient {
+public class CameraClient extends Client{
 	
 	//private static final String CAMERA_IP = "169.254.49.179";
 	
-    private BufferedReader in;
-    private PrintWriter out;
+    private static BufferedReader in;
+    private static PrintWriter out;
+    private static Socket socket;
+    private static ArrayList<String> allData;
+    private static final String ADDRESS = "localhost";
+    private static final int PORT = 9898;
    
 
     /**
@@ -31,10 +28,10 @@ public class CameraClient {
      * listener with the textfield so that pressing Enter in the
      * listener sends the textfield contents to the server.
      */
-    public CameraClient() {
+	//init client here
 
-    	//init client here
-        
+    public CameraClient(String address, int port) {
+       	super(address, port);
     }
 
     /**
@@ -43,21 +40,30 @@ public class CameraClient {
      * After establishing a connection(unsecure) the client then initializes its input stream and output
      * stream object
      */
-    public void connectToServer() throws IOException {
-
-        // Get the server address from a dialog box.
-        String serverAddress = "localhost";
-
-        // Make connection and initialize streams
-        Socket socket = new Socket(serverAddress, 9898);
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream(), true);
-
+    @Override
+    public boolean connectToServer() throws IOException {
+    	return super.connectToServer();
     }
     
     /**
-     * Example method to show how to use the in and out objects to send and receive data.
+     * Sends data to the server by using the super class's method..
      */
+    @Override
+    public void sendData(Object data){
+    	super.sendData(data);
+    }
+    
+    /**
+     * Receives data from the server and adds it to the object's private 
+     * String ArrayList by using the super class's method.
+     */
+    @Override
+    public ArrayList<String> receiveData() throws IOException{
+    	return super.receiveData();
+    }
+/*    //**
+     * Example method to show how to use the in and out objects to send and receive data.
+     *//*
     public void sendAndRecieve(){
     	//output is in the form of a string that must follow the protocol
     	String output = "";
@@ -73,14 +79,18 @@ public class CameraClient {
         }
     	System.out.println(response);
     }
-
+*/
     /**
      * Runs the client application.
      */
     public static void main(String[] args) throws Exception {
-        CameraClient client = new CameraClient();
+        CameraClient client = new CameraClient(ADDRESS, PORT);
         client.connectToServer();
-        client.sendAndRecieve();
+        Scanner scan = new Scanner(System.in); 	//For testing purposes
+        while(socket!=null && socket.isConnected()){
+        	client.sendData(scan.nextLine());
+        	System.out.println(client.receiveData());	//For testing purposes
+        }
     }
 }
 

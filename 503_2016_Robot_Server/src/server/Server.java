@@ -10,6 +10,17 @@ import java.net.Socket;
  * Server program that will live in the offboard processor on the robot rio. Accepts and sends messages to clients.
  * Protocol will be specified in documentation but just for reference should also be listed up her
  * 
+ * Protocol:
+ * Data Sent in form "ID" : "data"
+ * Input is split to give ID value and data.
+ * 
+ * Switch(ID) {
+ * Case ID: 
+ * New case for each type of data
+ * Interpret and do something with data
+ * }
+ * 
+ * Separate file with all IDs and meanings for reference
  */
 public class Server {
 	

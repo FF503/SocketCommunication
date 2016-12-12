@@ -1,4 +1,4 @@
-package serverCode;
+package server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,24 +10,37 @@ import java.net.Socket;
  * Server program that will live in the offboard processor on the robot rio. Accepts and sends messages to clients.
  * Protocol will be specified in documentation but just for reference should also be listed up her
  * 
+ * Protocol:
+ * Data Sent in form "ID" : "data"
+ * Input is split to give ID value and data.
+ * 
+ * Switch(ID) {
+ * Case ID: 
+ * New case for each type of data
+ * Interpret and do something with data
+ * }
+ * 
+ * Separate file with all IDs and meanings for reference
  */
 public class Server {
-
+	
+	private static final int PORT = 9898;
+	
     /**
      * Application method to run the server runs in an infinite loop
-     * listening on port 9898.  When a connection is requested, it
+     * listening a port.  When a connection is requested, it
      * spawns a new thread to do the servicing and immediately returns
      * to listening.  Server creates a new Client number for each client probably can be modified for client name.
      */
-    public static void main(String[] args) throws Exception {
-        System.out.println("The capitalization server is running.");
+    public static void main(String[] args) throws IOException {
         int clientNumber = 0;
-        ServerSocket listener = new ServerSocket(9898);
+        ServerSocket listener = new ServerSocket(PORT);
         try {
             while (true) { 
                 new ClientHandler(listener.accept(), clientNumber++).start();
             }
-        } finally {
+        }
+        finally {
             listener.close();
         }
     }
@@ -41,11 +54,13 @@ public class Server {
     	//Identification information about the client
         private Socket socket;
         private int clientNumber;
+        private BufferedReader in;
+        private PrintWriter out;
 
         public ClientHandler(Socket socket, int clientNumber) {
             this.socket = socket;
             this.clientNumber = clientNumber;
-            log("New connection with client# " + clientNumber + " at " + socket);
+            log("New connection with client " + clientNumber + " at " + socket);
         }
 
         /**
@@ -54,41 +69,43 @@ public class Server {
         public void run() {
             try {
 
-                // Decorate the streams so we can send characters
+                // Convert the streams so we can send characters
                 // and not just bytes.  Ensure output is flushed
                 // after every newline.
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                out = new PrintWriter(socket.getOutputStream(), true);
 
                 // Send a welcome message to the client.
-                out.println("Client #" + clientNumber + ".");
-                
+                out.println("Connection with client " + clientNumber + " at " + socket + " complete.");
+
+                String input = "";
 
                 // Get messages from the client enter switch statement to decide what to do
-                while (true) {
-                    String input = in.readLine();
-                    if (input == null || input.equals(".")) {
-                        break;
-                    }
-                    
-                    //  Handles all inputs based off of protocol.
-                    switch (input){
-                    
-                    }
+                while (!input.equals("exit")) {
+                    if (input != null){ 
+                	//  Handles all inputs based off of protocol.
+                        switch (input){
+                        
+                        }
+                        input = in.readLine();
+                    }                    
                 }
-            } catch (IOException e) {
-                log("Error handling client# " + clientNumber + ": " + e);
-            } finally {
+            } 
+            catch (IOException e) {
+            	e.printStackTrace();
+            }
+            finally {
                 try {
                     socket.close();
-                } catch (IOException e) {
-                    log("Couldn't close a socket, what's going on?");
                 }
-                log("Connection with client# " + clientNumber + " closed");
+                catch (IOException e) {
+                	e.printStackTrace();
+                }
+                log("Connection with client " + clientNumber + " closed");
             }
         }
 
-        //Too lazy to type System.out.println() lololol
+        //Dumbest method ever but too lazy to change it
         private void log(String message) {
             System.out.println(message);
         }

@@ -83,14 +83,21 @@ public class Server {
                 // Get messages from the client enter switch statement to decide what to do
                 while (!input.equals("exit")) {
                     if (input != null){ 
-                	//  Handles all inputs based off of protocol.
-                        switch (input){
+                	//Handles all inputs based off of protocol.
+                    	//Finds identifier of data
+                        String[] brokenInput = input.split(":");
+                        String identifier = brokenInput[0];
                         
+                        //  Handles all inputs based off of protocol.
+                        switch (identifier){
+                        
+                   
                         }
                         input = in.readLine();
                     }                    
                 }
-            } 
+            }
+               
             catch (IOException e) {
             	e.printStackTrace();
             }

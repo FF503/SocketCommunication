@@ -71,9 +71,14 @@ public class Server {
                         break;
                     }
                     
-                    //  Handles all inputs based off of protocol.
-                    switch (input){
+                   //Finds identifier of data
+                    String[] brokenInput = input.split(":");
+                    String identifier = brokenInput[0];
                     
+                    //  Handles all inputs based off of protocol.
+                    switch (identifier){
+                    
+               
                     }
                 }
             } catch (IOException e) {

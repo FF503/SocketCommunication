@@ -1,5 +1,7 @@
 package server;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -11,6 +13,17 @@ import java.util.Scanner;
  * Server program that will live in the offboard processor on the robot rio. Accepts and sends messages to clients.
  * Protocol will be specified in documentation but just for reference should also be listed up her
  * 
+ * Protocol:
+ * Data Sent in form "ID" : "data"
+ * Input is split to give ID value and data.
+ * 
+ * Switch(ID) {
+ * Case ID: 
+ * New case for each type of data
+ * Interpret and do something with data
+ * }
+ * 
+ * Separate file with all IDs and meanings for reference
  */
 public class Server {
 	
@@ -23,6 +36,7 @@ public class Server {
      * to listening.  Server creates a new Client number for each client probably can be modified for client name.
      */
     public static void main(String[] args) throws IOException {
+    	ClientHandler.log("The server is running");
         int clientNumber = 0;
         ServerSocket listener = new ServerSocket(PORT);
         try {
@@ -48,7 +62,7 @@ public class Server {
         private PrintWriter out;
 
         public ClientHandler(Socket socket, int clientNumber) {
-            this.socket = socket;
+            this.socket =  socket;
             this.clientNumber = clientNumber;
             log("New connection with client " + clientNumber + " at " + socket);
         }
@@ -57,22 +71,21 @@ public class Server {
          * Services each client by listening for data and sending back data when needed.
          */
         @Override
-        public void run(){
+        public void run() {
             try {
-
                 // Convert the streams so we can send characters
                 // and not just bytes.  Ensure output is flushed
                 // after every newline.
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            	in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new PrintWriter(socket.getOutputStream(), true);
                 Scanner scan = new Scanner(System.in);
-
                 // Send a welcome message to the client.
                 out.println("Connection with client " + clientNumber + " at " + socket + " complete.");
 
-                String input = "hello";
-                boolean done = false;
-
+                boolean done = false;                
+                // Send a welcome message to the client.
+                String input = "",  output = "";
+           
                 // Get messages from the client enter switch statement to decide what to do
                 while (!done) {
                 	//out.println(scan.nextLine());
@@ -80,16 +93,19 @@ public class Server {
                         input = in.readLine();
                     	log(input);
                 	//  Handles all inputs based off of protocol.
+                    	//Finds identifier of data
+                       // String[] brokenInput = input.toLowerCase().split(":");
+                        //String identifier = brokenInput[0];
                     	switch (input.toLowerCase()){
                         	case "exit":
                         		done = true;
                         		break;
                         	default:
-                        		break;
-                        }
-                    }                    
+                        		break;                  
+                    	}
+                    }
                 }
-            } 
+            }  
             catch (IOException e) {
             	e.printStackTrace();
             }
@@ -105,7 +121,7 @@ public class Server {
         }
 
         //Dumbest method ever but too lazy to change it
-        private void log(String message) {
+        private static void log(String message) {
             System.out.println(message);
         }
     }

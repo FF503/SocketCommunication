@@ -35,6 +35,7 @@ public class CameraClient extends Client{
      * algorithm and the server are housed in the same processor, the ip address used is localhost.
      * After establishing a connection(unsecure) the client then initializes its input stream and output
      * stream object
+     * @throwsIOException
      */
     @Override
     public boolean connectToServer() throws IOException {
@@ -43,9 +44,10 @@ public class CameraClient extends Client{
     
     /**
      * Sends data to the server by using the super class's method..
+     * @throws IOException 
      */
     @Override
-    public void sendData(Object data){
+    public void sendData(Object data) throws IOException{
     	super.sendData(data);
     }
     
@@ -58,39 +60,20 @@ public class CameraClient extends Client{
     	return super.receiveData();
     }
     
-    
-/*    //**
-     * Example method to show how to use the in and out objects to send and receive data.
-     *//*
-    public void sendAndRecieve(){
-    	//output is in the form of a string that must follow the protocol
-    	String output = "";
-    	out.println(output);
-    	String response;
-    	try {
-            response = in.readLine();
-            if (response == null || response.equals("")) {
-                  System.exit(0);
-              }
-        } catch (IOException ex) {
-               response = "Error: " + ex;
-        }
-    	System.out.println(response);
-    }
-*/
     /**
      * Runs the client application.
      */
     public static void main(String[] args) throws Exception {
         CameraClient client = new CameraClient(ADDRESS, PORT);
         client.connectToServer();
-        Scanner scan = new Scanner(System.in); 	//For testing purposes
+        Scanner scan = new Scanner(System.in); 
         System.out.println(client.connectToServer());
         while(socket!=null && socket.isConnected()){
-    		//System.out.println(client.receiveData());	//For testing purposes
+    		//System.out.println(client.receiveData());
         	client.sendData(scan.nextLine());
         }
         client.socket.close();
+        System.out.println("The socket has closed its connection.");
     }
 }
 

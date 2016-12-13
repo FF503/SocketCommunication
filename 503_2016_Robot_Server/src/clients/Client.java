@@ -2,6 +2,7 @@ package clients;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 public abstract class Client {
 	
-	private static BufferedReader in;
+	private BufferedReader in;
 	private static PrintWriter out;
 	private static int port;
 	private static String address;
@@ -18,8 +19,8 @@ public abstract class Client {
 	protected static Socket socket;
 	
 	public Client(String address, int port){
-		this.port = port;
-		this.address = address;
+		Client.port = port;
+		Client.address = address;
 		allData = new ArrayList<String>();
 	}
 	
@@ -27,27 +28,30 @@ public abstract class Client {
 		socket = new Socket(address, port);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()), true);
-		//in.mark(1000);	Could be useful
 		return socket.isConnected();
 	}
 	
-	protected void sendData(Object data){
+	protected void sendData(Object data) throws IOException {
 		out.println(data);
 	}
 	
-	protected ArrayList<String> receiveData() throws IOException{
+	protected ArrayList<String> receiveData() throws IOException {
 		String line = null;
 		ArrayList<String> data = new ArrayList<String>();
-		while((line=in.readLine()) != null){
+		while((line=in.readLine()) != null) {
 			data.add(line);
 		}
-		//Not sure which method we want to use.
 		allData.addAll(data);
-		//allData = data;
 		return data;
 	}
 	
+	@Override
 	public String toString(){
 		return "Socket at port " + port + " and address at " + address;
 	}
+	
+	private static void log(String message) {
+        System.out.println(message);
+    }
+	
 }

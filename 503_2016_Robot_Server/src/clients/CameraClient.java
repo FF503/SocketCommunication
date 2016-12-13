@@ -2,6 +2,7 @@ package clients;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -83,15 +84,22 @@ public class CameraClient extends Client{
     public static void main(String[] args) throws Exception {
         CameraClient client = new CameraClient(ADDRESS, PORT);
         client.connectToServer();
+        if(socket.isConnected()) {
+        	log("CONNECTED!!!");
+        }
         
-        Scanner scan = new Scanner(System.in); 	//For testing purposes
+       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
         while(socket!=null && socket.isConnected()){
-        	System.out.println(client.receiveData());
+        	System.out.println(client.receiveData().toString());
         	
         	//For testing purposes
-        	client.sendData(scan.nextLine());
+        	client.sendData(br.readLine());
         }
+    }
+    
+    private static void log(String message) {
+        System.out.println(message);
     }
 }
 

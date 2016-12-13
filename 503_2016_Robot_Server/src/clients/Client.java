@@ -12,30 +12,28 @@ import java.util.ArrayList;
 public abstract class Client {
 	
 	private BufferedReader in;
-	//private static PrintWriter out;
-	private static DataOutputStream out;
+	private static PrintWriter out;
 	private static int port;
 	private static String address;
 	protected static ArrayList<String> allData;
 	protected static Socket socket;
 	
 	public Client(String address, int port){
-		this.port = port;
-		this.address = address;
+		Client.port = port;
+		Client.address = address;
 		allData = new ArrayList<String>();
 	}
 	
 	protected boolean connectToServer() throws IOException{
 		socket = new Socket(address, port);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		//out = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()), true);
-		out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-		//in.mark(1000);	Could be useful
+		out = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()), true);
+		
 		return socket.isConnected();
 	}
 	
 	protected void sendData(String data) throws IOException{
-		out.writeUTF(data);
+		out.print(data);
 	}
 	
 	protected ArrayList<String> receiveData() throws IOException{
@@ -50,7 +48,13 @@ public abstract class Client {
 		return data;
 	}
 	
+	@Override
 	public String toString(){
 		return "Socket at port " + port + " and address at " + address;
 	}
+	
+	private static void log(String message) {
+        System.out.println(message);
+    }
+	
 }

@@ -1,5 +1,7 @@
 package server;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -33,6 +35,7 @@ public class Server {
      * to listening.  Server creates a new Client number for each client probably can be modified for client name.
      */
     public static void main(String[] args) throws IOException {
+    	ClientHandler.log("The Server is Running");
         int clientNumber = 0;
         ServerSocket listener = new ServerSocket(PORT);
         try {
@@ -54,11 +57,12 @@ public class Server {
     	//Identification information about the client
         private Socket socket;
         private int clientNumber;
+        private BufferedReader br;
         private BufferedReader in;
         private PrintWriter out;
 
         public ClientHandler(Socket socket, int clientNumber) {
-            this.socket = socket;
+            this.socket =  socket;
             this.clientNumber = clientNumber;
             log("New connection with client " + clientNumber + " at " + socket);
         }
@@ -66,20 +70,28 @@ public class Server {
         /**
          * Services each client by listening for data and sending back data when needed.
          */
+        @Override
         public void run() {
             try {
-
                 // Convert the streams so we can send characters
                 // and not just bytes.  Ensure output is flushed
                 // after every newline.
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            	in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new PrintWriter(socket.getOutputStream(), true);
-
+                br = new BufferedReader(new InputStreamReader(System.in));
+                
                 // Send a welcome message to the client.
-                out.println("Connection with client " + clientNumber + " at " + socket + " complete.");
+                String input = "",  output = "";
+ 
 
-                String input = "";
-
+                while (!input.equalsIgnoreCase("Exit")) {
+    				input = in.readLine();
+    				log(input); // print client message
+    				output = br.readLine();
+    				out.print(output);
+    				out.flush();
+    			}
+                /*
                 // Get messages from the client enter switch statement to decide what to do
                 while (!input.equals("exit")) {
                     if (input != null){ 
@@ -95,7 +107,7 @@ public class Server {
                         }
                         input = in.readLine();
                     }                    
-                }
+                }*/
             }
                
             catch (IOException e) {
@@ -113,7 +125,7 @@ public class Server {
         }
 
         //Dumbest method ever but too lazy to change it
-        private void log(String message) {
+        private static void log(String message) {
             System.out.println(message);
         }
     }

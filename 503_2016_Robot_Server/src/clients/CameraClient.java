@@ -45,7 +45,7 @@ public class CameraClient extends Client{
      * Sends data to the server by using the super class's method..
      */
     @Override
-    public void sendData(Object data){
+    public void sendData(String data) throws IOException{
     	super.sendData(data);
     }
     
@@ -83,9 +83,13 @@ public class CameraClient extends Client{
     public static void main(String[] args) throws Exception {
         CameraClient client = new CameraClient(ADDRESS, PORT);
         client.connectToServer();
+        
         Scanner scan = new Scanner(System.in); 	//For testing purposes
+        
         while(socket!=null && socket.isConnected()){
-        	System.out.println(client.receiveData());	//For testing purposes
+        	System.out.println(client.receiveData());
+        	
+        	//For testing purposes
         	client.sendData(scan.nextLine());
         }
     }

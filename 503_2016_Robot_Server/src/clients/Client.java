@@ -2,6 +2,7 @@ package clients;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -10,8 +11,9 @@ import java.util.ArrayList;
 
 public abstract class Client {
 	
-	private static BufferedReader in;
-	private static PrintWriter out;
+	private BufferedReader in;
+	//private static PrintWriter out;
+	private static DataOutputStream out;
 	private static int port;
 	private static String address;
 	protected static ArrayList<String> allData;
@@ -26,13 +28,14 @@ public abstract class Client {
 	protected boolean connectToServer() throws IOException{
 		socket = new Socket(address, port);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		out = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()), true);
+		//out = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()), true);
+		out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 		//in.mark(1000);	Could be useful
 		return socket.isConnected();
 	}
 	
-	protected void sendData(Object data){
-		out.println(data);
+	protected void sendData(String data) throws IOException{
+		out.writeUTF(data);
 	}
 	
 	protected ArrayList<String> receiveData() throws IOException{

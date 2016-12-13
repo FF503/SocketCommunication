@@ -1,5 +1,7 @@
 package server;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -33,6 +35,7 @@ public class Server {
      * to listening.  Server creates a new Client number for each client probably can be modified for client name.
      */
     public static void main(String[] args) throws IOException {
+    	System.out.println("The Server is Running");
         int clientNumber = 0;
         ServerSocket listener = new ServerSocket(PORT);
         try {
@@ -54,11 +57,13 @@ public class Server {
     	//Identification information about the client
         private Socket socket;
         private int clientNumber;
-        private BufferedReader in;
-        private PrintWriter out;
+        private BufferedReader br;
+        private DataInputStream in;
+        private DataOutputStream out;
+        //private PrintWriter out;
 
         public ClientHandler(Socket socket, int clientNumber) {
-            this.socket = socket;
+            this.socket =  socket;
             this.clientNumber = clientNumber;
             log("New connection with client " + clientNumber + " at " + socket);
         }
@@ -72,14 +77,28 @@ public class Server {
                 // Convert the streams so we can send characters
                 // and not just bytes.  Ensure output is flushed
                 // after every newline.
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                out = new PrintWriter(socket.getOutputStream(), true);
-
+                //in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            	
+            	in = new DataInputStream(socket.getInputStream());
+               // out = new PrintWriter(socket.getOutputStream(), true);
+            	out = new DataOutputStream(socket.getOutputStream());
+                br = new BufferedReader(new InputStreamReader(System.in));
+                
                 // Send a welcome message to the client.
-                out.println("Connection with client " + clientNumber + " at " + socket + " complete.");
+                log("Connection with client " + clientNumber + " at " + socket + " complete.");
 
-                String input = "";
+                String input = "",  output = "";
+    			
+    			System.out.println("Enter \"Exit\" to Quit");
 
+                while (!input.equals("Exit")) {
+    				input = in.readUTF();
+    				log(input); // print client message
+    				output = br.readLine();
+    				out.writeUTF(output);
+    				out.flush();
+    			}
+                /*
                 // Get messages from the client enter switch statement to decide what to do
                 while (!input.equals("exit")) {
                     if (input != null){ 
@@ -95,7 +114,7 @@ public class Server {
                         }
                         input = in.readLine();
                     }                    
-                }
+                }*/
             }
                
             catch (IOException e) {

@@ -58,6 +58,7 @@ public class CameraClient extends Client{
     	return super.receiveData();
     }
     
+    
 /*    //**
      * Example method to show how to use the in and out objects to send and receive data.
      *//*
@@ -84,10 +85,12 @@ public class CameraClient extends Client{
         CameraClient client = new CameraClient(ADDRESS, PORT);
         client.connectToServer();
         Scanner scan = new Scanner(System.in); 	//For testing purposes
+        System.out.println(client.connectToServer());
         while(socket!=null && socket.isConnected()){
-        	System.out.println(client.receiveData());	//For testing purposes
+    		//System.out.println(client.receiveData());	//For testing purposes
         	client.sendData(scan.nextLine());
         }
+        client.socket.close();
     }
 }
 

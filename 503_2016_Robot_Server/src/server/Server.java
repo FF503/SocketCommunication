@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  * Server program that will live in the offboard processor on the robot rio. Accepts and sends messages to clients.
@@ -55,7 +56,8 @@ public class Server {
         /**
          * Services each client by listening for data and sending back data when needed.
          */
-        public void run() {
+        @Override
+        public void run(){
             try {
 
                 // Convert the streams so we can send characters
@@ -63,20 +65,28 @@ public class Server {
                 // after every newline.
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new PrintWriter(socket.getOutputStream(), true);
+                Scanner scan = new Scanner(System.in);
 
                 // Send a welcome message to the client.
                 out.println("Connection with client " + clientNumber + " at " + socket + " complete.");
 
-                String input = "";
+                String input = "hello";
+                boolean done = false;
 
                 // Get messages from the client enter switch statement to decide what to do
-                while (!input.equals("exit")) {
+                while (!done) {
+                	//out.println(scan.nextLine());
                     if (input != null){ 
-                	//  Handles all inputs based off of protocol.
-                        switch (input){
-                        
-                        }
                         input = in.readLine();
+                    	log(input);
+                	//  Handles all inputs based off of protocol.
+                    	switch (input.toLowerCase()){
+                        	case "exit":
+                        		done = true;
+                        		break;
+                        	default:
+                        		break;
+                        }
                     }                    
                 }
             } 
@@ -85,11 +95,11 @@ public class Server {
             }
             finally {
                 try {
-                    socket.close();
-                }
+					socket.close();
+				} 
                 catch (IOException e) {
-                	e.printStackTrace();
-                }
+					e.printStackTrace();
+				}
                 log("Connection with client " + clientNumber + " closed");
             }
         }

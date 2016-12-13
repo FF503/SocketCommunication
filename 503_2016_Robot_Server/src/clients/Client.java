@@ -32,19 +32,18 @@ public abstract class Client {
 		return socket.isConnected();
 	}
 	
-	protected void sendData(String data) throws IOException{
+	protected void sendData(Object data) throws IOException {
 		out.print(data);
 	}
 	
-	protected ArrayList<String> receiveData() throws IOException{
+	protected ArrayList<String> receiveData() throws IOException {
 		String line = null;
 		ArrayList<String> data = new ArrayList<String>();
-		while((line=in.readLine()) != null){
+		while((line=in.readLine()) != null) {
 			data.add(line);
 		}
-		//Not sure which method we want to use.
+		
 		allData.addAll(data);
-		//allData = data;
 		return data;
 	}
 	

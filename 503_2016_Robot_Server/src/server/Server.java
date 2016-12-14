@@ -77,24 +77,30 @@ public class Server {
             	in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new PrintWriter(socket.getOutputStream(), true);
                 Scanner scan = new Scanner(System.in);
+                
                 // Send a welcome message to the client.
                 out.println("Connection with client " + clientNumber + " at " + socket + " complete.");
 
                 boolean done = false;                
-                // Send a welcome message to the client.
                 String input = "",  output = "";
            
                 // Get messages from the client enter switch statement to decide what to do
-                while (!done) {
+                while(!done) {
                 	//out.println(scan.nextLine());
-                    if (input != null){ 
+                    if(input != null){ 
                         input = in.readLine();
                     	log(input);
-                	//  Handles all inputs based off of protocol.
-                       // String[] tokens = input.toLowerCase().split(":");
-                    	switch (input.toLowerCase()){
+                        //Handles all inputs based off of protocol.
+                    	//Finds identifier of data
+                        String[] brokenInput = input.toLowerCase().split(":");
+                        String identifier = brokenInput[0];
+                        
+                    	switch (identifier){
                         	case "exit":
                         		done = true;
+                        		break;
+                        	case "0" :
+                        		log(brokenInput[1]);
                         		break;
                         	default:
                         		break;                  

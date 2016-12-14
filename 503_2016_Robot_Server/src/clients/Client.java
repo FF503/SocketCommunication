@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import sendRecieve.*;
+
 public class Client extends Thread {
 	
 	protected static BufferedReader in;

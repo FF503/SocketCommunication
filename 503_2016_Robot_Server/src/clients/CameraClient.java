@@ -3,9 +3,11 @@ package clients;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 /**
  *CLient Class for the camera needs to be integrated with actual camera code. 
@@ -60,10 +62,30 @@ public class CameraClient extends Client{
     	return super.receiveData();
     }
     
+    public static void main(String[] args) throws IOException {
+    	Client.log("The client is running");
+        CameraClient client = new CameraClient(ADDRESS, PORT);
+        client.start();
+        client.connectToServer();
+
+        Scanner scan = new Scanner(System.in);
+        String line = client.in.readLine();
+        
+		//ArrayList<String> data = new ArrayList<String>();
+		boolean done = false;
+        //System.out.println(client.connectToServer());
+        while((socket!=null && socket.isConnected())){
+    		//System.out.println(client.receiveData());
+        	client.sendData(scan.nextLine());
+        }
+        client.socket.close();
+        System.out.println("The socket has closed its connection.");
+    }
+    
     /**
      * Runs the client application.
      */
-    public static void main(String[] args) throws Exception {
+  /*  public static void main(String[] args) throws Exception {
         CameraClient client = new CameraClient(ADDRESS, PORT);
         client.connectToServer();
         Scanner scan = new Scanner(System.in); 
@@ -77,6 +99,6 @@ public class CameraClient extends Client{
         }
         client.socket.close();
         System.out.println("The socket has closed its connection.");
-    }
+    }*/
 }
 

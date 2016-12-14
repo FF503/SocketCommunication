@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public abstract class Client {
+public class Client extends Thread{
 	
 	protected static BufferedReader in;
 	private static PrintWriter out;
@@ -39,17 +39,22 @@ public abstract class Client {
 		String line = null;
 		ArrayList<String> data = new ArrayList<String>();
 		boolean done = false;
-		line = in.readLine();
-		if(line!=null){
-			if(line.equalsIgnoreCase("exit")){
-				done = true;
-			}
-			else{
-				data.add(line);
-			}
+		while((line = in.readLine()).equalsIgnoreCase("exit")){
+			
 		}
 		allData.addAll(data);
 		return data;
+	}
+	
+	@Override
+	public void run(){
+		try {
+			connectToServer();
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@Override

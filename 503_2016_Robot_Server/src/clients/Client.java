@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public abstract class Client {
 	
-	private BufferedReader in;
+	protected static BufferedReader in;
 	private static PrintWriter out;
 	private static int port;
 	private static String address;
@@ -38,8 +38,15 @@ public abstract class Client {
 	protected ArrayList<String> receiveData() throws IOException {
 		String line = null;
 		ArrayList<String> data = new ArrayList<String>();
-		while((line=in.readLine()) != null) {
-			data.add(line);
+		boolean done = false;
+		line = in.readLine();
+		if(line!=null){
+			if(line.equalsIgnoreCase("exit")){
+				done = true;
+			}
+			else{
+				data.add(line);
+			}
 		}
 		allData.addAll(data);
 		return data;

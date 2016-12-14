@@ -1,7 +1,5 @@
 package server;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -93,9 +91,7 @@ public class Server {
                         input = in.readLine();
                     	log(input);
                 	//  Handles all inputs based off of protocol.
-                    	//Finds identifier of data
-                       // String[] brokenInput = input.toLowerCase().split(":");
-                        //String identifier = brokenInput[0];
+                       // String[] tokens = input.toLowerCase().split(":");
                     	switch (input.toLowerCase()){
                         	case "exit":
                         		done = true;

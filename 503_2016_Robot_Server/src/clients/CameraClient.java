@@ -67,10 +67,23 @@ public class CameraClient extends Client{
         CameraClient client = new CameraClient(ADDRESS, PORT);
         client.connectToServer();
         Scanner scan = new Scanner(System.in); 
+    	String line = client.in.readLine();
+		ArrayList<String> data = new ArrayList<String>();
+		boolean done = false;
         System.out.println(client.connectToServer());
-        while(socket!=null && socket.isConnected()){
+        while((socket!=null && socket.isConnected())){
     		//System.out.println(client.receiveData());
         	client.sendData(scan.nextLine());
+			/*if(line!=null){
+				line = client.in.readLine();
+				switch(line.toLowerCase()){
+					case "exit":
+						done = true;
+						break;
+					default:
+						break;
+				}
+			}*/
         }
         client.socket.close();
         System.out.println("The socket has closed its connection.");

@@ -1,4 +1,5 @@
 package server;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
+
+import sendRecieve.*;
 
 /**
  * Server program that will live in the offboard processor on the robot rio. Accepts and sends messages to clients.
@@ -39,7 +42,7 @@ public class Server {
         ServerSocket listener = new ServerSocket(PORT);
         try {
             while (true) { 
-                new ClientHandler(listener.accept(), clientNumber++).start();
+                new ClientHandler(listener.accept(), clientNumber++).start();;
             }
         }
         finally {
@@ -56,7 +59,8 @@ public class Server {
     	//Identification information about the client
         private Socket socket;
         private int clientNumber;
-        private BufferedReader in;
+       // private BufferedReader in;
+        private RecieveData in;
         private PrintWriter out;
 
         public ClientHandler(Socket socket, int clientNumber) {
@@ -71,13 +75,20 @@ public class Server {
         @Override
         public void run() {
             try {
+            	
                 // Convert the streams so we can send characters
                 // and not just bytes.  Ensure output is flushed
                 // after every newline.
-            	in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            	
+            	//in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            	in = new RecieveData(socket);
                 out = new PrintWriter(socket.getOutputStream(), true);
                 Scanner scan = new Scanner(System.in);
                 
+                //boolean done = false;
+               /* while(true) {
+                	in.start();
+                }*/
                 // Send a welcome message to the client.
                 out.println("Connection with client " + clientNumber + " at " + socket + " complete.");
 
@@ -88,7 +99,7 @@ public class Server {
                 // Get messages from the client enter switch statement to decide what to do
                 while(!done) {
                 	//out.println(scan.nextLine());
-                	input = in.readLine();
+    //            	input = in.readLine();
                     if(input != null){ 
                     	log(input);
 
@@ -108,7 +119,7 @@ public class Server {
                         		break;                  
                     	}
                     }
-                }
+                }           
             }  
             catch (IOException e) {
             	e.printStackTrace();

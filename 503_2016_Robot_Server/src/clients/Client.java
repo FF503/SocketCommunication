@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import sendRecieve.*;
+
 public abstract class Client extends Thread {
 	
 	private static BufferedReader in;
@@ -24,10 +26,6 @@ public abstract class Client extends Thread {
 	public Client(String address, int port){
 		this.port = port;
 		this.address = address;
-	}
-	
-	public Client(Socket socket){
-		this.socket = socket;
 	}
 	
     /**

@@ -45,6 +45,9 @@ public class Server {
                 new ClientHandler(listener.accept(), clientNumber++).start();;
             }
         }
+        catch(Exception e){
+        	e.printStackTrace();
+        }
         finally {
             listener.close();
         }
@@ -59,13 +62,12 @@ public class Server {
     	//Identification information about the client
         private Socket socket;
         private int clientNumber;
-        private BufferedReader in;
-       // private RecieveData in;
-        private PrintWriter out;
+        private static SendAndReceive message;
 
         public ClientHandler(Socket socket, int clientNumber) {
             this.socket =  socket;
             this.clientNumber = clientNumber;
+            message = new SendAndReceive(socket);
             log("New connection with client " + clientNumber + " at " + socket);
         }
 
@@ -74,65 +76,24 @@ public class Server {
          */
         @Override
         public void run() {
+        	
+            // Convert the streams so we can send characters
+            // and not just bytes.  Ensure output is flushed
+            // after every newline.
+            
+            // Send a welcome message to the client.
+            message.sendData("Connection with client " + clientNumber + " at " + socket + " complete.");
+
+            (new Thread(message.send)).start();
+            (new Thread(message.receive)).start();
+            while(!message.getDone()){}
+            log("Connection with client " + clientNumber + " closed");
             try {
-            	
-                // Convert the streams so we can send characters
-                // and not just bytes.  Ensure output is flushed
-                // after every newline.
-            	
-            	in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            	//in = new RecieveData(socket);
-                out = new PrintWriter(socket.getOutputStream(), true);
-                Scanner scan = new Scanner(System.in);
-                
-                //boolean done = false;
-               /* while(true) {
-                	in.start();
-                }*/
-                // Send a welcome message to the client.
-                out.println("Connection with client " + clientNumber + " at " + socket + " complete.");
-
-                boolean done = false;                
-                String input = "",  output = "", identifier="";
-                String[] tokens;
-           
-                // Get messages from the client enter switch statement to decide what to do
-                while(!done) {
-                	out.println(scan.nextLine());
-                	input = in.readLine();
-                    if(input != null){ 
-                    	log(input);
-
-                        //Handles all inputs based off of protocol.
-                    	//Finds identifier of data
-                        tokens = input.toLowerCase().split(":");
-                        identifier = tokens[0];
-                        
-                    	switch (identifier){
-                        	case "exit":
-                        		done = true;
-                        		break;
-                        	case "0" :
-                        		log(tokens[1]);
-                        		break;
-                        	default:
-                        		break;                  
-                    	}
-                    }
-                }           
-            }  
+				socket.close();
+			} 
             catch (IOException e) {
-            	e.printStackTrace();
-            }
-            finally {
-                try {
-					socket.close();
-				} 
-                catch (IOException e) {
-					e.printStackTrace();
-				}
-                log("Connection with client " + clientNumber + " closed");
-            }
+				e.printStackTrace();
+			}
         }
 
         private static void log(String message) {

@@ -29,13 +29,11 @@ public class CameraClient extends Client{
         	connectToServer();
         	
             // Send a welcome message to the server.
-            sendData("Connection with server at " + socket);
+            message.sendData("Connection with server at " + socket + " completed.");
             (new Thread(message.send)).start();
             (new Thread(message.receive)).start();
-            //(new Thread(send)).start();
-            //(new Thread(receive)).start();
-            while(!loopDone){}
-            sendData("Connection with server closed.");
+            while(!message.getDone()){}
+            message.sendData("Connection with server closed.");
         }  
         catch (IOException e) {
         	e.printStackTrace();
@@ -62,57 +60,6 @@ public class CameraClient extends Client{
     @Override
     public void connectToServer() throws IOException {
     	super.connectToServer();
-
-        send = new Runnable(){
-        	@Override
-        	public void run(){	
-        		while(!loopDone){
-        			sendData(scan.nextLine());
-        		}
-        	}
-        };
-        
-        receive = new Runnable(){
-        	@Override
-        	public void run(){
-        		String line = "";
-        		while(!loopDone){
-        			try {
-        				line = receiveData();
-    					if(line!=null){
-    						log(line);
-    						switch(line){
-    							case "exit":
-    								loopDone = true;
-    								break;
-    							default:
-    								break;
-    						}
-    					}
-    				} 
-        			catch (IOException e) {
-    					e.printStackTrace();
-    				}
-        		}
-            }
-        };
-    }
-    
-    /**
-     * Sends data to the server by using the super class's method..
-     */
-    @Override
-    public void sendData(Object data){
-    	super.sendData(data);
-    }
-    
-    /**
-     * Receives data from the server and adds it to the object's private 
-     * String ArrayList by using the super class's method.
-     */
-    @Override
-    public String receiveData() throws IOException{
-    	return super.receiveData();
     }
         
     public static void main(String[] args) throws IOException {

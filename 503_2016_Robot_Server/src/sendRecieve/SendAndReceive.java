@@ -28,60 +28,68 @@ public class SendAndReceive extends Thread {
 		loopDone = false;
 	}
 	
-	public static Runnable receive = new Runnable(){
+	public boolean getDone(){
+		return loopDone;
+	}
+	
+	public Runnable receive = new Runnable(){
 		String[] tokens;
-		String identifier;
+		String identifier, input = null;
 		@Override
 		public void run() {
-			while(!loopDone){
-		       try {
-		    	   String input = "";
-		    	   while(!loopDone) {
-		               if(input != null){ 
-		            	   input = in.readLine();
-		                   log(input);
-		                   //Handles all inputs based off of protocol.
-		                   //Finds identifier of data
-		                   tokens = input.toLowerCase().split(":");
-		                   identifier = tokens[0];
-		                   
-		               	   switch (identifier){
-		               	   		case "exit":
-		               	   			loopDone=true;
-		                   			break;
-		               	   		case "0" :
-		                   			log(tokens[1]);
-		                   			break;
-		               	   		default:
-		                   			break;                  
-		               	   }	
-		               }
-		    	   }
-		    	   
-		       }
-		       catch (IOException e) {
-		       	e.printStackTrace();
-		       }
-		       finally {
-		           try {
-						socket.close();
-					} 
-		           catch (IOException e) {
-						e.printStackTrace();
-					}
-		       }			    
-			}
+	       try {
+	    	   while(!loopDone) {
+	        	   input = in.readLine();
+	               if(input != null){ 
+	                   log(input);
+	                   //Handles all inputs based off of protocol.
+	                   //Finds identifier of data
+	                   tokens = input.toLowerCase().split(":");
+	                   identifier = tokens[0];
+	                   
+	               	   switch (identifier){
+	               	   		case "exit":
+	               	   			loopDone=true;
+	                   			break;
+	               	   		case "0" :
+	                   			log(tokens[1]);
+	                   			break;
+	               	   		default:
+	                   			break;                  
+	               	   }	
+	               }
+	    	   } 
+	       }
+	       catch (IOException e) {
+	       	e.printStackTrace();
+	       }
+	       finally {
+	           try {
+					socket.close();
+				} 
+	           catch (IOException e) {
+					e.printStackTrace();
+				}
+	       }			    
 	   }
 	};
 
-	public static Runnable send = new Runnable(){
+	public Runnable send = new Runnable(){
 		@Override
 		public void run(){
 			while(!loopDone){
-				out.println(scan.nextLine());
+				sendData(scan.nextLine());
 			}
 		}
 	};
+	
+	public void sendData(Object data){
+		out.println(data);
+	}
+	
+	public String receiveData() throws IOException{
+		return in.readLine();
+	}
    private static void log(String message) {
        System.out.println(message);
    }

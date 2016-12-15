@@ -19,18 +19,43 @@ public class CameraClient extends Client{
 	
     private static final String ADDRESS = "localhost";
     private static final int PORT = 9898;
-   
 
     /**
      * Constructs the client by laying out the GUI and registering a
      * listener with the textfield so that pressing Enter in the
      * listener sends the textfield contents to the server.
      */
-	//init client here
-
     public CameraClient(String address, int port) {
        	super(address, port);
     }
+    
+    @Override
+    public void run(){
+    	try{
+        	connectToServer();
+        	
+            // Send a welcome message to the server.
+            sendData("Connection with server at " + socket);
+            
+            (new Thread(send)).start();
+            //(new Thread(receive)).start();
+
+            sendData("Connection with server closed.");
+        }  
+        catch (IOException e) {
+        	e.printStackTrace();
+        }
+        finally {
+            try {
+				socket.close();
+			} 
+            catch (IOException e) {
+				e.printStackTrace();
+			}
+            log("Connection with server closed");
+        }
+    };
+    
 
     /**
      * Sets up the connection between the camera algorithm and the server. Since both the camera
@@ -40,16 +65,49 @@ public class CameraClient extends Client{
      * @throwsIOException
      */
     @Override
-    public boolean connectToServer() throws IOException {
-    	return super.connectToServer();
+    public void connectToServer() throws IOException {
+    	super.connectToServer();
+
+        send = new Runnable(){
+        	@Override
+        	public void run(){	
+        		while(!loopDone){
+        			sendData(scan.nextLine());
+        		}
+        	}
+        };
+        
+        receive = new Runnable(){
+        	@Override
+        	public void run(){
+        		String line = "";
+        		while(!loopDone){
+        			try {
+        				line = receiveData();
+    					if(line!=null){
+    						log(line);
+    						switch(line){
+    							case "exit":
+    								loopDone = true;
+    								break;
+    							default:
+    								break;
+    						}
+    					}
+    				} 
+        			catch (IOException e) {
+    					e.printStackTrace();
+    				}
+        		}
+            }
+        };
     }
     
     /**
      * Sends data to the server by using the super class's method..
-     * @throws IOException 
      */
     @Override
-    public void sendData(Object data) throws IOException{
+    public void sendData(Object data){
     	super.sendData(data);
     }
     
@@ -58,47 +116,24 @@ public class CameraClient extends Client{
      * String ArrayList by using the super class's method.
      */
     @Override
-    public ArrayList<String> receiveData() throws IOException{
+    public String receiveData() throws IOException{
     	return super.receiveData();
     }
-    
+        
     public static void main(String[] args) throws IOException {
-    	Client.log("The client is running");
+    	log("The client is running");
         CameraClient client = new CameraClient(ADDRESS, PORT);
         client.start();
-        client.connectToServer();
 
-        Scanner scan = new Scanner(System.in);
-        String line = client.in.readLine();
-        
-		//ArrayList<String> data = new ArrayList<String>();
-		boolean done = false;
-        //System.out.println(client.connectToServer());
-        while((socket!=null && socket.isConnected())){
-    		//System.out.println(client.receiveData());
-        	client.sendData(scan.nextLine());
-        }
-        client.socket.close();
-        System.out.println("The socket has closed its connection.");
-    }
-    
-    /**
-     * Runs the client application.
-     */
-  /*  public static void main(String[] args) throws Exception {
-        CameraClient client = new CameraClient(ADDRESS, PORT);
+       /* Scanner scan = new Scanner(System.in);
         client.connectToServer();
-        Scanner scan = new Scanner(System.in); 
-    	String line = client.in.readLine();
-		ArrayList<String> data = new ArrayList<String>();
 		boolean done = false;
-        System.out.println(client.connectToServer());
         while((socket!=null && socket.isConnected())){
     		//System.out.println(client.receiveData());
         	client.sendData(scan.nextLine());
         }
         client.socket.close();
-        System.out.println("The socket has closed its connection.");
-    }*/
+        System.out.println("The socket has closed its connection.");*/
+    }
 }
 

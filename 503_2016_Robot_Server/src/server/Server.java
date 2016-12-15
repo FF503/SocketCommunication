@@ -82,25 +82,27 @@ public class Server {
                 out.println("Connection with client " + clientNumber + " at " + socket + " complete.");
 
                 boolean done = false;                
-                String input = "",  output = "";
+                String input = "",  output = "", identifier="";
+                String[] tokens;
            
                 // Get messages from the client enter switch statement to decide what to do
                 while(!done) {
                 	//out.println(scan.nextLine());
+                	input = in.readLine();
                     if(input != null){ 
-                        input = in.readLine();
                     	log(input);
+
                         //Handles all inputs based off of protocol.
                     	//Finds identifier of data
-                        String[] brokenInput = input.toLowerCase().split(":");
-                        String identifier = brokenInput[0];
+                        tokens = input.toLowerCase().split(":");
+                        identifier = tokens[0];
                         
                     	switch (identifier){
                         	case "exit":
                         		done = true;
                         		break;
                         	case "0" :
-                        		log(brokenInput[1]);
+                        		log(tokens[1]);
                         		break;
                         	default:
                         		break;                  

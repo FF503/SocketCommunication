@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import sendRecieve.*;
+import sendRecieve.SendAndReceive;
 
 public abstract class Client extends Thread {
 	
@@ -22,6 +22,7 @@ public abstract class Client extends Thread {
 	protected static Scanner scan;
 	protected static boolean loopDone;
 	protected static Runnable send, receive;
+	protected static SendAndReceive message;
 	
 	public Client(String address, int port){
 		this.port = port;
@@ -41,6 +42,7 @@ public abstract class Client extends Thread {
 		out = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()), true);
 		scan = new Scanner(System.in);
 		loopDone = false;
+		message = new SendAndReceive(socket);
 	}
 	
 	protected void sendData(Object data) {

@@ -30,10 +30,11 @@ public class CameraClient extends Client{
         	
             // Send a welcome message to the server.
             sendData("Connection with server at " + socket);
-            
-            (new Thread(send)).start();
-            (new Thread(receive)).start();
-            while(!loopDone){            }
+            (new Thread(message.send)).start();
+            (new Thread(message.receive)).start();
+            //(new Thread(send)).start();
+            //(new Thread(receive)).start();
+            while(!loopDone){}
             sendData("Connection with server closed.");
         }  
         catch (IOException e) {

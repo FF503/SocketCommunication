@@ -26,6 +26,7 @@ public abstract class Client extends Thread {
 	public Client(String address, int port){
 		this.port = port;
 		this.address = address;
+		allData = new ArrayList<String>();
 	}
 	
     /**
@@ -48,7 +49,9 @@ public abstract class Client extends Thread {
 	
 	protected String receiveData() throws IOException {
 		String data = in.readLine();
-		allData.add(data);
+		if(data!=null){
+			allData.add(data);
+		}
 		return data;
 	}
 	

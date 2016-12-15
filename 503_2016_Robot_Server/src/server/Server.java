@@ -59,8 +59,8 @@ public class Server {
     	//Identification information about the client
         private Socket socket;
         private int clientNumber;
-       // private BufferedReader in;
-        private RecieveData in;
+        private BufferedReader in;
+       // private RecieveData in;
         private PrintWriter out;
 
         public ClientHandler(Socket socket, int clientNumber) {
@@ -80,8 +80,8 @@ public class Server {
                 // and not just bytes.  Ensure output is flushed
                 // after every newline.
             	
-            	//in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            	in = new RecieveData(socket);
+            	in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            	//in = new RecieveData(socket);
                 out = new PrintWriter(socket.getOutputStream(), true);
                 Scanner scan = new Scanner(System.in);
                 
@@ -98,8 +98,8 @@ public class Server {
            
                 // Get messages from the client enter switch statement to decide what to do
                 while(!done) {
-                	//out.println(scan.nextLine());
-    //            	input = in.readLine();
+                	out.println(scan.nextLine());
+                	input = in.readLine();
                     if(input != null){ 
                     	log(input);
 
@@ -135,7 +135,6 @@ public class Server {
             }
         }
 
-        //Dumbest method ever but too lazy to change it
         private static void log(String message) {
             System.out.println(message);
         }

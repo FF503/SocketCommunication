@@ -1,12 +1,6 @@
 package clients;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 
 /**
@@ -38,8 +32,8 @@ public class CameraClient extends Client{
             sendData("Connection with server at " + socket);
             
             (new Thread(send)).start();
-            //(new Thread(receive)).start();
-
+            (new Thread(receive)).start();
+            while(!loopDone){            }
             sendData("Connection with server closed.");
         }  
         catch (IOException e) {
@@ -58,7 +52,7 @@ public class CameraClient extends Client{
     
 
     /**
-     * Sets up the connection between the camera algorithm and the server. Since both the camera
+     * Sets up the connection between the offboard processor and the server. Since both the camera
      * algorithm and the server are housed in the same processor, the ip address used is localhost.
      * After establishing a connection(unsecure) the client then initializes its input stream and output
      * stream object
@@ -124,16 +118,6 @@ public class CameraClient extends Client{
     	log("The client is running");
         CameraClient client = new CameraClient(ADDRESS, PORT);
         client.start();
-
-       /* Scanner scan = new Scanner(System.in);
-        client.connectToServer();
-		boolean done = false;
-        while((socket!=null && socket.isConnected())){
-    		//System.out.println(client.receiveData());
-        	client.sendData(scan.nextLine());
-        }
-        client.socket.close();
-        System.out.println("The socket has closed its connection.");*/
     }
 }
 

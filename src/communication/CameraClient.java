@@ -1,4 +1,4 @@
-package clients;
+package communication;
 
 import java.io.IOException;
 

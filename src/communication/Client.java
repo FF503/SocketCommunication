@@ -1,10 +1,8 @@
-package clients;
+package communication;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-
-import sendRecieve.SendAndReceive;
 
 public abstract class Client extends Thread {
 	

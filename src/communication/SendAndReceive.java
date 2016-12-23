@@ -16,7 +16,7 @@ public class SendAndReceive extends Thread {
 	private static boolean loopDone;
 	
 	public SendAndReceive(Socket socket) {
-		this.socket = socket;
+		SendAndReceive.socket = socket;
 		try {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()), true);
@@ -41,7 +41,7 @@ public class SendAndReceive extends Thread {
 	    	   while(!loopDone) {
 	        	   input = in.readLine();
 	               if(input != null){ 
-	                   log(input);
+	                   //log(input);
 	                   //Handles all inputs based off of protocol.
 	                   //Finds identifier of data
 	                   tokens = input.toLowerCase().split(":");

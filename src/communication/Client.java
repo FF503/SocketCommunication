@@ -13,8 +13,8 @@ public abstract class Client extends Thread {
 	protected static SendAndReceive message;
 	
 	public Client(String address, int port){
-		this.port = port;
-		this.address = address;
+		Client.port = port;
+		Client.address = address;
 		allData = new ArrayList<String>();
 	}
 	

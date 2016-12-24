@@ -18,3 +18,5 @@ Interpret and do something with data
 }
 
 Separate file with all IDs and meanings for reference
+DATA TYPES:
+0 : String

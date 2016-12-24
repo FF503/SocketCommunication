@@ -66,6 +66,7 @@ public class CameraClient extends Client{
     	log("The client is running");
         CameraClient client = new CameraClient(ADDRESS, PORT);
         client.start();
+        
     }
 }
 
